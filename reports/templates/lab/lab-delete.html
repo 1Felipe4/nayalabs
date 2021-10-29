@@ -1,0 +1,75 @@
+{% extends 'report/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+
+{% block 'content' %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Delete {{object}}?</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Layout</a></li>
+            <li class="breadcrumb-item active">Fixed Layout</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+
+    <div class="row">
+
+      <div class="col">
+
+        <div class="card card-danger">
+          <div class="card-header">
+            <h3 class="card-title">Delete Lab Record</h3>
+          </div>
+          <div class="card-body">
+          <div class="row">
+            {% if object.name %}
+              <div class="col-12 col-sm-4">
+                <div class="info-box bg-light">
+                  <div class="info-box-content">
+                    <span class="info-box-text text-center text-muted">Name</span>
+                    <span class="info-box-number text-center text-muted mb-0">{{object.name}}</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+      </div>
+      
+
+    </div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-12">
+          <a href="#" class="btn btn-secondary">Cancel</a>
+          <input type="submit" value="Delete Lab" class="btn btn-danger float-right">
+        </div>
+      </div>
+    </form>
+
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock %}

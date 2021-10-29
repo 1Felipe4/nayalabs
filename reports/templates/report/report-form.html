@@ -1,0 +1,169 @@
+{% extends 'report/base.html' %}
+
+{%load static%}
+
+{% block 'content' %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          {% if object %}
+          <h1>Edit Report</h1>
+          {% else %}
+          <h1>Add Report</h1>
+          {% endif %}
+
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Layout</a></li>
+            <li class="breadcrumb-item active">Fixed Layout</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+
+        <div class="col-md-6">
+
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">General</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="{{ form.type.id_for_label }}">Name</label>
+                {{ form.type}}
+                <span id="" class="text-danger text-sm">{{form.type.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.result.id_for_label }}">Result</label>
+                {{ form.result}}
+                <span id="" class="text-danger text-sm">{{form.result.errors}}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="{{ form.desired_result.id_for_label }}">Desired Result</label>
+                {{ form.desired_result}}
+                <span id="" class="text-danger text-sm">{{form.desired_result.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.details.id_for_label }}">Details</label>
+                {{ form.details}}
+                <span id="" class="text-danger text-sm">{{form.details.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.date.id_for_label }}">Date</label>
+                {{ form.date}}
+                <span id="" class="text-danger text-sm">{{form.date.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.client.id_for_label }}">Client</label>
+                {{ form.client}}
+                <span id="" class="text-danger text-sm">{{form.client.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.performed_by.id_for_label }}">Performed By</label>
+                {{ form.performed_by}}
+                <span id="" class="text-danger text-sm">{{form.performed_by.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.lab.id_for_label }}">Lab</label>
+                {{ form.lab}}
+                <span id="" class="text-danger text-sm">{{form.lab.errors}}</span>
+              </div>
+
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        {% comment %} <div class="col-md-6">
+          <div class="card card-secondary">
+            <div class="card-header">
+              <h3 class="card-title">Brand Image</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              {% if object.pic %}
+              <img src="{{object.pic.url}}" style="height: 100px" alt="" class="img-thumbnail">
+              {% endif %}
+              <div class="form-group">
+                <label for="exampleInputFile">Image</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <label class="custom-file-label" for="{{ form.pic.id_for_label }}">Choose file</label>
+                    {{ form.pic}}
+                  </div>
+                </div>
+                <span id="" class="text-danger text-sm">{{form.pic.errors}}</span>
+
+              </div>
+            </div>
+
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div> {% endcomment %}
+        {{ form.non_field_errors }}
+
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <a href="#" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-success float-right">
+
+            {% if object %}
+            Update Report
+            {% else %}
+            Add Report
+            {% endif %}
+          </button>
+        </div>
+      </div>
+    </form>
+
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock %}
+
+
+{%block 'script'%}
+<script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+
+<!-- Page specific script -->
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+</script>
+
+{% endblock 'script' %}

@@ -1,0 +1,118 @@
+{% load static %}
+{% load qr_code %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>My Title</title>
+    <style type="text/css">
+        @page {
+                size: {{ pagesize }};
+                margin: 1cm;
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0cm;
+                    margin-left: 9cm;
+                    margin-right: 9cm;
+                    height: 1cm;
+                }
+            }
+    </style>
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+</head>
+
+<body>
+      <section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Report Detail</h3>
+
+        
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+            <h3 class="text-primary"> {{object.type}}</h3>
+            {%if object.result%}
+              <div class="text-muted">
+                <p class="text-sm">Result
+                  <b class="d-block">{{object.result}}</b>
+                </p>
+                </div>
+            {%endif%}
+              {%if object.result%}
+              <div class="text-muted">
+                <p class="text-sm">Desired Result
+                  <b class="d-block">{{object.desired_result}}</b>
+                </p>
+              </div>
+            {%endif%}
+            </div>
+          </div>
+          <div class="col-12 col-md-12 col-lg-8 order-1 order-md-2">
+            <h4 class="text-muted">Details</h4>
+            <p>
+              {{object.detail}}
+            </p>
+            <ul class="list-unstyled">
+              <li>
+                <a href="{{link}}" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
+                  {{link}}</a>
+              </li>
+              <li>
+                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-pdf"></i> {{host}}{{object.lab.logo}}</a>
+              </li>
+              <li>
+                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-envelope"></i>
+                  Email-from-flatbal.mln</a>
+              </li>
+              <li>
+                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-image "></i> Logo.png</a>
+              </li>
+              <li>
+                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
+                  Contract-10_12_2014.docx</a>
+              </li>
+            </ul>
+            <div class="mt-5 mb-3">
+              <a href="#" class="btn btn-sm btn-primary">Add files</a>
+              <a href="#" class="btn btn-sm btn-warning">Report contact</a>
+            </div>
+          </div>
+        </div>
+        <img src="{% qr_url_from_text link image_format='png' url_signature_enabled=False %}" style='width: 200px;' class='img-thumbnail' alt="Hello World!" >
+        <img src="{{host}}{{object.lab.logo}}" style='width: 200px;' class='img-thumbnail' alt="Hello World!" >
+
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </section>
+    <div id="footerContent">
+        {% block page_foot %}
+        Page <pdf:pagenumber>
+            {% endblock %}
+    </div>
+</body>
+
+</html>
