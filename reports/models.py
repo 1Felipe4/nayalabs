@@ -64,6 +64,7 @@ class Tester(models.Model):
 class Lab(models.Model):
     name = models.CharField(_("Name"), max_length=512)
     logo = models.ImageField(_("Logo"), upload_to=None, height_field=None, width_field=None, max_length=None)
+   
 
     def __str__(self):
         return self.name 

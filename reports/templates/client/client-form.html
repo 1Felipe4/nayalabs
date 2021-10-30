@@ -2,6 +2,13 @@
 
 {% load static %}
 
+{% block 'head'%}
+
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+
+{% endblock 'head'%}
+
 {% block 'content' %}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -76,12 +83,18 @@
                 {{ form.sex}}
                 <span id="" class="text-danger text-sm">{{form.sex.errors}}</span>
               </div>    
-
+              
               <div class="form-group">
-                <label for="{{ form.dob.id_for_label }}">Date of Birth</label>
-                {{ form.dob}}
-                <span id="" class="text-danger text-sm">{{form.dob.errors}}</span>
-              </div>
+                  <label for="{{ form.dob.id_for_label }}"> Date:</label>
+                    <div class="input-group date" id="clientdob" data-target-input="nearest">
+                        {{ form.dob}}
+                        <div class="input-group-append" data-target="#clientdob" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                        <span id="" class="text-danger text-sm">{{form.dob.errors}}</span>
+
+                    </div>
+                </div>
 
             </div>
             <!-- /.card-body -->
@@ -116,13 +129,15 @@
 
 
 {% block 'script'%}
-<script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
 
 <!-- Page specific script -->
 <script>
   $(function () {
-    bsCustomFileInput.init();
+    $('#clientdob').datetimepicker({ format: "YYYY-MM-DD" });
   });
 </script>
 
-{% endblock 'script' %}
+{% endblock %}

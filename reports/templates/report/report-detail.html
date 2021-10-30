@@ -109,7 +109,7 @@
                   </div>
                   {% endif%}
                   <div class="mt-5 mb-3">
-                    <a href="{% url 'report_pdf' object.pk %}" class="btn btn-sm btn-primary">View PDF</a>
+                    <a href="{% url 'report_pdf' object.pk %}" target='_blank' class="btn btn-sm btn-primary">View PDF</a>
                     <a href="{% url 'report_update' object.pk %}" class="btn btn-sm btn-info">Edit Report</a>
                     <a href="{% url 'report_delete' object.pk %}" class="btn btn-sm btn-danger">Delete Report</a>
                     

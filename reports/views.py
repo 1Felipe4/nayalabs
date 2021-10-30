@@ -82,6 +82,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     form_class = ClientForm
     template_name = "client/client-form.html"
 
+@login_required
 def clientReportView(request, pk):
     client = get_object_or_404(Client, pk=pk)
     context = {}
@@ -233,6 +234,9 @@ def height(logo, width):
     divisor = logo.width/width
     return logo.height/divisor
 
+def width(logo, height):
+    divisor = logo.height/height
+    return logo.width/divisor
 
 def gen_qr(text, path):
     qr = qrcode.make(text)
@@ -276,24 +280,135 @@ def pdf_view(request, pk):
     return FileResponse(buffer, as_attachment=False, filename='hello.pdf')
 
 def pdf_page(request, pk):
+    obj = get_object_or_404(Report, pk=pk)
+    response = HttpResponse(content_type='application/pdf')
+    pdf_name = f"{obj}.pdf"
+    response['Content-Disposition'] = f'filename={pdf_name}'
     PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
     styles = getSampleStyleSheet()
+    heading3 = styles['Heading3']
+    heading4 = styles['Heading4']
 
     buff = io.BytesIO()
     doc = SimpleDocTemplate(buff)
-    Story = [Spacer(1,2*inch)]
+    Story = []
     style = styles["Normal"]
+    im = pdfImage(obj.lab.logo.path, width=8*inch, height=height(obj.lab.logo, 8*inch))
+    Story.append(im)
+
+    patient_data= [
+        [f'Patient ID Number: ', f'{obj.client.id_number}'],
+        [f'Patient: ', f'{obj.client.full_name}'],
+        [f'Date of Birth: ', f'{obj.client.dob}'],
+        [f'Sex: ', f'{obj.client.sex}'],
+        [f'Patient Record #:: ', f'{obj.client.pk}'],
+
+        ]
+    patient_table=Table(patient_data,2*[1.6*inch], 5*[.25*inch])
+    patient_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('SIZE', (0, 0), (-1, -1), 10),
+        ('LEADING', (0, 0), (-1, -1), 8.4),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 2.6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.6),
+    ]))
+
+    report_data= [
+        [f'Test Request:', f'{obj.type}'],       
+        [f'Result:', f'{obj.result}'],
+        [f'Desired Result: ', f'{obj.desired_result}'],
+        [f'Date: ', f'{obj.date.date()}'],
+        [f'Report ID:', f'{obj.pk}'],
+        ]
+    report_table=Table(report_data,2*[1.6*inch], 5*[.25*inch])
+    report_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('SIZE', (0, 0), (-1, -1), 10),
+        ('LEADING', (0, 0), (-1, -1), 8.4),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 2.6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.6),
+        
+    ]))
+
+    data_table_data = [[patient_table, report_table]]
+    data_table=Table(data_table_data,2*[3.4*inch], 1*[1.5*inch])
+    data_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('SIZE', (0, 0), (-1, -1), 10),
+        ('LEADING', (0, 0), (-1, -1), 8.4),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('TOPPADDING', (0, 0), (-1, -1), 2.6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.6),
+        ('GRID',(0,0),(1,-1),2, colors.black),
+
+    ]))
+    Story.append(Spacer(1,0.2*inch))
+    Story.append(data_table)
+    Story.append(Spacer(1,0.2*inch))
+    
+    main_headings_data= [[Paragraph('Test Request', heading3), Paragraph(obj.type, heading3)]]
+    main_headings_table=Table(main_headings_data,2*[3*inch], 1*[0.5*inch])
+    main_headings_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 2.6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 2.6),
+        ('LINEBELOW', (0, 0), (-1, -1), 0.3, colors.gray),
+    ]))
+    # Add the content as before then...
+    Story.append(main_headings_table)
+
+    main_data= [[Paragraph('Test Result', heading3), Paragraph(obj.result, heading3)]]
+    main_table=Table(main_data,2*[3*inch], 1*[0.5*inch])
+    main_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+    # Add the content as before then...
+    Story.append(main_table)
+    Story.append(Spacer(1,0.2*inch))
+    details_heading = Paragraph('Interpretation Reference', heading3)
+    Story.append(details_heading)
+
+
+    details = Paragraph(obj.details, style)
+    # Add the content as before then...
+    Story.append(details)
+
+
+
+    Story.append(Spacer(1,0.2*inch))
+
+    p = Paragraph(obj.details, style)
+    # Story.append(p)
+    Story.append(Spacer(1,0.2*inch))
+    
+    if request.is_secure():
+        protocol = 'https'
+    else:
+        protocol = 'http'
+    current_site = get_current_site(request)
+    host = f'{protocol}://{current_site.domain}{request.path}'
+    path = settings.MEDIA_ROOT + '/qrcodes/'+str(obj.pk)+".png"    
+    qrimage = gen_qr(host, path)
+    qr = pdfImage(path, width=1.5*inch, height=1.5*inch)
+
+    bottom_data= [[qr, Paragraph(f'Performed By: {obj.performed_by}', heading3)]]
+    bottom_table=Table(bottom_data,2*[3*inch], 1*[2*inch])
+    bottom_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
 
     # Add the content as before then...
-
-    for i in range(100):
-        bogustext = ("This is Paragraph number %s. " % i) *20
-        p = Paragraph(bogustext, style)
-        Story.append(p)
-        Story.append(Spacer(1,0.2*inch))
+    Story.append(bottom_table)
     doc.build(Story, onFirstPage=myLaterPages, onLaterPages=myLaterPages)
 
-    return FileResponse(buff, as_attachment=False, filename='test.pdf',)
+    response.write(buff.getvalue())
+    buff.close()
+    return response
 
 def pdf_page_old(request, pk):
     obj = get_object_or_404(Report, pk=pk)
@@ -318,13 +433,13 @@ def pdf_page_old(request, pk):
 
     current_site = get_current_site(request)
 
-    host = f'{protocol}://{current_site.domain}{request.path}'
 
-    path = settings.MEDIA_ROOT + '/qrcodes/'+str(obj.pk)+".png"
     logo_width = 1*inch
     logo_height = height(obj.lab.logo, logo_width)
     im = pdfImage(obj.lab.logo.path, width=logo_width, height=logo_height)
     im.hAlign='RIGHT'
+    host = f'{protocol}://{current_site.domain}{request.path}'
+    path = settings.MEDIA_ROOT + '/qrcodes/'+str(obj.pk)+".png"    
     qrimage = gen_qr(host, path)
     qr = pdfImage(path, width=1.5*inch, height=1.5*inch)
     f1Story = []

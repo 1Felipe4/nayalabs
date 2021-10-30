@@ -27,7 +27,7 @@ SECRET_KEY = '7-hy-dq&25t(!1ov*egzy@5b5(smg6p(rp%!bsua2tbridf1rs'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['labreportsarchive.trinipost.com', 'trinipost.com', '127.0.0.1']
 
 
 # Application definition

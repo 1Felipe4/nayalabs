@@ -33,7 +33,7 @@ class ClientForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['sex'].widget.attrs.update({'class': 'form-control'})
         self.fields['id_number'].widget.attrs.update({'class': 'form-control'})
-        self.fields['dob'].widget.attrs.update({'class': 'form-control'})
+        self.fields['dob'].widget.attrs.update({ 'class': 'form-control datetimepicker-input', 'data-target': '#clientdob'})
 
 
 class TesterForm(forms.ModelForm):

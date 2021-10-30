@@ -5,8 +5,8 @@ from reportlab.lib.units import inch
 PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 styles = getSampleStyleSheet()
 
-Title = "Hello world"
-pageinfo = "platypus example"
+Title = "Lab Report"
+pageinfo = "Lab Report"
 def myFirstPage(canvas, doc):
     canvas.saveState()
     canvas.setFont('Times-Bold',16)
