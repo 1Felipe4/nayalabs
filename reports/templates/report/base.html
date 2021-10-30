@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +18,9 @@
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
   <!-- Theme style -->
+  
+  {% block 'head' %}{% endblock 'head' %}
+  
   <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -31,11 +34,11 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="../../index3.html" class="nav-link">Home</a>
+        <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
+      {% comment %} <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
-      </li>
+      </li> {% endcomment %}
     </ul>
 
     <!-- Right navbar links -->
@@ -114,7 +117,7 @@
           </li>
           <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-car"></i>
+              <i class="nav-icon fas fa-clipboard"></i>
               <p>
                 Reports
                 <i class="fas fa-angle-left right"></i>
@@ -134,7 +137,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../layout/boxed.html" class="nav-link">
+                <a href="" class="nav-link">
                   <i class="fa fa-search nav-icon"></i>
                   <p>Advanced Search</p>
                 </a>
@@ -212,10 +215,10 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{% url 'logout' %}" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>
-                My Profile
+                Log Out
               </p>
             </a>
           </li>

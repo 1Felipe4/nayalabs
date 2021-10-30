@@ -130,3 +130,5 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 SERVE_QR_CODE_IMAGE_PATH = 'qr-code-image/'
+
+LOGOUT_REDIRECT_URL = '/'

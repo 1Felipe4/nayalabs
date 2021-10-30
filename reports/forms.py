@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 class ReportForm(forms.ModelForm):
     class Meta:
         model =  Report
-        exclude = ('date','file')
+        exclude = ('file',)
 
     def __init__(self, *args, **kwargs):
         super( ReportForm, self).__init__(*args, **kwargs)
@@ -19,6 +19,8 @@ class ReportForm(forms.ModelForm):
         self.fields['desired_result'].widget.attrs.update({'class': 'form-control'})
         self.fields['performed_by'].widget.attrs.update({'class': 'form-control'})  
         self.fields['lab'].widget.attrs.update({'class': 'form-control'})
+        self.fields['date'].widget.attrs.update({ 'class': 'form-control datetimepicker-input', 'data-target': '#reportdatetime'})
+
 
 class ClientForm(forms.ModelForm):
     class Meta:
@@ -32,6 +34,7 @@ class ClientForm(forms.ModelForm):
         self.fields['sex'].widget.attrs.update({'class': 'form-control'})
         self.fields['id_number'].widget.attrs.update({'class': 'form-control'})
         self.fields['dob'].widget.attrs.update({'class': 'form-control'})
+
 
 class TesterForm(forms.ModelForm):
     class Meta:
@@ -71,13 +74,5 @@ class UserRegisterForm(UserCreationForm):
 class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
-    username = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder':'Username'}))
-    password = forms.CharField(widget=forms.PasswordInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder':'Password'
-        }
-))
+        self.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Username'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Password'})

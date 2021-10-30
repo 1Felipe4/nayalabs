@@ -12,13 +12,14 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Delete {{object}}?</h1>
+          <h1>Delete Report?</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Layout</a></li>
-            <li class="breadcrumb-item active">Fixed Layout</li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'report_list'%}">Reports</a></li>            
+            <li class="breadcrumb-item"><a href="{% url 'report_detail' object.pk%}">Report</a></li>
+            <li class="breadcrumb-item active">Delete Report</li>
           </ol>
         </div>
       </div>
@@ -84,7 +85,7 @@
       {% csrf_token %}
       <div class="row">
         <div class="col-12">
-          <a href="#" class="btn btn-secondary">Cancel</a>
+          <a href="{% url 'report_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
           <input type="submit" value="Delete Report" class="btn btn-danger float-right">
         </div>
       </div>

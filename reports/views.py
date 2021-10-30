@@ -32,6 +32,7 @@ from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 
 def home(request):
     return redirect('dashboard')
@@ -54,6 +55,7 @@ class ReportCreateView(LoginRequiredMixin, CreateView):
     model = Report
     form_class = ReportForm
     template_name = "report/report-form.html"
+    
 
 class ReportUpdateView(LoginRequiredMixin, UpdateView):
     model = Report
@@ -67,6 +69,8 @@ class ReportDetailView(LoginRequiredMixin, DetailView):
 class ReportListView(LoginRequiredMixin, ListView):
     model = Report
     template_name = "report/reports.html"
+    ordering = ['-pk']
+
 
 class ReportDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Report
@@ -78,6 +82,20 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     form_class = ClientForm
     template_name = "client/client-form.html"
 
+def clientReportView(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    context = {}
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        context = {'form':form}
+        if(form.is_valid()):
+            report = form.save()
+            return redirect('report_detail', report.pk)
+    else:    
+        form = ReportForm(initial={'client': client.pk})
+        context = {'form': form}
+    return render(request, 'report/report-form.html', context)
+
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm    
@@ -87,9 +105,20 @@ class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = "client/client-detail.html"
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        client = Client.objects.filter(pk=self.kwargs['pk']).first()
+        recent_reports = Report.objects.filter(client__pk=client.pk).order_by('-pk')[:5]
+        context['reports'] = recent_reports
+        return context
+
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = "client/clients.html"
+    ordering = ['-pk']
+
 
 class ClientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Client
@@ -100,6 +129,7 @@ class TesterCreateView(LoginRequiredMixin, CreateView):
     model = Tester
     form_class = TesterForm
     template_name = "tester/tester-form.html"
+    
 
 class TesterUpdateView(LoginRequiredMixin, UpdateView):
     model = Tester
@@ -110,9 +140,19 @@ class TesterDetailView(LoginRequiredMixin, DetailView):
     model = Tester
     template_name = "tester/tester-detail.html"
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        performed_by = Tester.objects.filter(pk=self.kwargs['pk']).first()
+        recent_reports = Report.objects.filter(performed_by__pk=performed_by.pk).order_by('-pk')[:5]
+        context['reports'] = recent_reports
+        return context
+
 class TesterListView(LoginRequiredMixin, ListView):
     model = Tester
     template_name = "tester/testers.html"
+    ordering = ['-pk']
 
 class TesterDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Tester
@@ -132,10 +172,21 @@ class LabUpdateView(LoginRequiredMixin, UpdateView):
 class LabDetailView(LoginRequiredMixin, DetailView):
     model = Lab
     template_name = "lab/lab-detail.html"
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        lab = Lab.objects.filter(pk=self.kwargs['pk']).first()
+        recent_reports = Report.objects.filter(lab__pk=lab.pk).order_by('-pk')[:5]
+        context['reports'] = recent_reports
+        return context
 
 class LabListView(LoginRequiredMixin, ListView):
     model = Lab
     template_name = "lab/labs.html"
+    ordering = ['-pk']
+
 
 class LabDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Lab
@@ -259,7 +310,16 @@ def pdf_page_old(request, pk):
     heading1 = styles['Heading1']  
     heading3 = styles['Heading3']
     # Add the content as before then...
-    host = request.META['HTTP_HOST'] + request.path
+    # host = request.META['HTTP_HOST'] + request.path
+    if request.is_secure():
+        protocol = 'https'
+    else:
+        protocol = 'http'
+
+    current_site = get_current_site(request)
+
+    host = f'{protocol}://{current_site.domain}{request.path}'
+
     path = settings.MEDIA_ROOT + '/qrcodes/'+str(obj.pk)+".png"
     logo_width = 1*inch
     logo_height = height(obj.lab.logo, logo_width)

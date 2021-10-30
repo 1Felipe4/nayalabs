@@ -16,8 +16,8 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Layout</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            
             <li class="breadcrumb-item active">Fixed Layout</li>
           </ol>
         </div>
@@ -61,7 +61,7 @@
       {% csrf_token %}
       <div class="row">
         <div class="col-12">
-          <a href="#" class="btn btn-secondary">Cancel</a>
+          <a href="{% url 'lab_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
           <input type="submit" value="Delete Lab" class="btn btn-danger float-right">
         </div>
       </div>

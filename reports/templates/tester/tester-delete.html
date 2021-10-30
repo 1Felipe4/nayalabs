@@ -16,9 +16,10 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Layout</a></li>
-            <li class="breadcrumb-item active">Fixed Layout</li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'tester_list' %}">Technicians</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'tester_detail' object.pk %}">Technician</a></li>            
+            <li class="breadcrumb-item active">Delete</li>
           </ol>
         </div>
       </div>
@@ -62,8 +63,8 @@
       {% csrf_token %}
       <div class="row">
         <div class="col-12">
-          <a href="#" class="btn btn-secondary">Cancel</a>
-          <input type="submit" value="Delete Client" class="btn btn-danger float-right">
+          <a href="{% url 'tester_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+          <input type="submit" value="Delete Technician" class="btn btn-danger float-right">
         </div>
       </div>
     </form>

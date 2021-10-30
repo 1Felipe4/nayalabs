@@ -1,6 +1,14 @@
 {% extends 'report/base.html' %}
 
-{%load static%}
+{% load static%}
+
+{% block 'head'%}
+
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+
+{% endblock 'head'%}
+
 
 {% block 'content' %}
 <!-- Content Wrapper. Contains page content -->
@@ -19,9 +27,18 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Layout</a></li>
-            <li class="breadcrumb-item active">Fixed Layout</li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'report_list'%}">Reports</a></li>
+            {% if object %}
+              <li class="breadcrumb-item"><a href="{% url 'report_detail' object.pk%}">Report</a></li>            
+            {% endif %}            
+            <li class="breadcrumb-item active">
+            {% if object %}
+            Edit Report
+            {% else %}
+            Add Report
+            {% endif %}
+            </li>
           </ol>
         </div>
       </div>
@@ -69,18 +86,25 @@
                 <span id="" class="text-danger text-sm">{{form.details.errors}}</span>
               </div>
 
-              <div class="form-group">
-                <label for="{{ form.date.id_for_label }}">Date</label>
-                {{ form.date}}
-                <span id="" class="text-danger text-sm">{{form.date.errors}}</span>
-              </div>
+                  <div class="form-group">
+                    <label for="{{ form.date.id_for_label }}">Date and time:</label>
+                    <div class="input-group date" id="reportdatetime" data-target-input="nearest">
+                        {{ form.date}}
+                        <div class="input-group-append" data-target="#reportdatetime" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <span id="" class="text-danger text-sm">{{form.date.errors}}</span>
 
+                  </div>
+
+              {% if not client %}
               <div class="form-group">
                 <label for="{{ form.client.id_for_label }}">Client</label>
                 {{ form.client}}
                 <span id="" class="text-danger text-sm">{{form.client.errors}}</span>
               </div>
-
+              {% endif %}
               <div class="form-group">
                 <label for="{{ form.performed_by.id_for_label }}">Performed By</label>
                 {{ form.performed_by}}
@@ -135,7 +159,7 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <a href="#" class="btn btn-secondary">Cancel</a>
+          <a href="{% url 'report_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
           <button type="submit" class="btn btn-success float-right">
 
             {% if object %}
@@ -156,14 +180,16 @@
 {% endblock %}
 
 
-{%block 'script'%}
-<script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+{% block 'script'%}
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
 
 <!-- Page specific script -->
 <script>
   $(function () {
-    bsCustomFileInput.init();
+    $('#reportdatetime').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD HH:mm:ss" });
   });
 </script>
 
-{% endblock 'script' %}
+{% endblock 'script' %}  

@@ -33,6 +33,7 @@ urlpatterns = [
     path('reports', ReportListView.as_view(), name='report_list'),
     path('add-client', ClientCreateView.as_view(), name='client_new'),
     path('client/<int:pk>', ClientDetailView.as_view(), name='client_detail'),
+    path('client/<int:pk>/add-report', report_views.clientReportView, name='client_report_new'),    
     path('edit-client/<int:pk>', ClientUpdateView.as_view(), name='client_update'),
     path('delete-client/<int:pk>', ClientDeleteView.as_view(), name='client_delete'),
     path('clients', ClientListView.as_view(), name='client_list'),
@@ -53,10 +54,7 @@ urlpatterns = [
     path("accounts/register/", report_views.register, name="register"),
     path("pdf-report/<int:pk>", report_views.pdf_page_old, name="report_pdf"),
     path("pdf-xy/<int:pk>", report_views.pdf_view, name="report_xy"),
-
     path('qr_code/', include('qr_code.urls', namespace="qr_code")),
-
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -53,7 +53,7 @@
 {% block 'script' %}
 <script>
 
-$(function () {
+{% comment %} $(function () {
   $.validator.setDefaults({
     submitHandler: function () {
       $('#loginForm').submit()
@@ -88,7 +88,7 @@ $(function () {
       $(element).removeClass('is-invalid');
     }
   });
-});
+}); {% endcomment %}
 </script>
 
 {% endblock 'script' %}

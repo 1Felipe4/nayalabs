@@ -16,7 +16,8 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'lab_list' %}">Labs</a></li>
             <li class="breadcrumb-item active">Lab Detail</li>
           </ol>
         </div>
@@ -44,41 +45,29 @@
       <div class="card-body">
         <div class="row">
         
-          <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+          <div class="col-md-6 col-lg-6">
             <h3 class="text-primary"> {{object.name}}</h3>
-          <img src="{{object.logo.url}}" style="" class="img-thumbnail" alt="Responsive image">
+            <img src="{{object.logo.url}}" style="width: 200px" class="img-thumbnail" alt="Responsive image">
 
-
+            <div class="mt-5 mb-3">
+                <a href="{% url 'lab_update' object.pk %}" class="btn btn-sm btn-info">Edit</a>
+                <a href="{% url 'lab_delete' object.pk %}" class="btn btn-sm btn-danger">Delete</a>
             </div>
           </div>
-
-          <div class="col-12 col-md-12 col-lg-8 order-1 order-md-2">
+           {% if reports %}
+          <div class="col-md-6 col-lg-6">
             <h4 class="text-muted">Reports</h4>
             <ul class="list-unstyled">
+              {% for report in reports %}
               <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
-                  Functional-requirements.docx</a>
+                <a href="{% url 'report_detail' report.pk%}" class="btn-link text-secondary"><i class="far fa-fw fa-clipboard"></i>
+                {{report.type}} - {{report.date}}</a>
               </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-pdf"></i> UAT.pdf</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-envelope"></i>
-                  Email-from-flatbal.mln</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-image "></i> Logo.png</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
-                  Contract-10_12_2014.docx</a>
-              </li>
+              {% endfor %}
             </ul>
-            <div class="mt-5 mb-3">
-              <a href="#" class="btn btn-sm btn-primary">Add files</a>
-              <a href="#" class="btn btn-sm btn-warning">Report contact</a>
-            </div>
+            
           </div>
+          {% endif %}
         </div>
       </div>
       <!-- /.card-body -->

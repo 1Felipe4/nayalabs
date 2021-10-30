@@ -11,13 +11,14 @@
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>{{object}}</h1>
+        <div class="col-sm-7">
+          <h2>{{object}}</h2>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Report Detail</li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'report_list'%}">Reports</a></li>
+            <li class="breadcrumb-item active">Report Details</li>
           </ol>
         </div>
       </div>
@@ -26,79 +27,162 @@
 
   <!-- Main content -->
   <section class="content">
+    <div class='container-fluid'>
+      <div class="row">
+        <div class="col-md-8">
+          <!-- Default box -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Report Details</h3>
 
-    <!-- Default box -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Report Detail</h3>
-
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
-            <h3 class="text-primary"> {{object.type}}</h3>
-            {%if object.result%}
-              <div class="text-muted">
-                <p class="text-sm">Result
-                  <b class="d-block">{{object.result}}</b>
-                </p>
-                </div>
-            {%endif%}
-              {%if object.result%}
-              <div class="text-muted">
-                <p class="text-sm">Desired Result
-                  <b class="d-block">{{object.desired_result}}</b>
-                </p>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                  <i class="fas fa-times"></i>
+                </button>
               </div>
-            {%endif%}
             </div>
-          </div>
-          <div class="col-12 col-md-12 col-lg-8 order-1 order-md-2">
-            <h4 class="text-muted">Details</h4>
-            <p>
-              {{object.detail}}
-            </p>
-            <ul class="list-unstyled">
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
-                  Functional-requirements.docx</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-pdf"></i> UAT.pdf</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-envelope"></i>
-                  Email-from-flatbal.mln</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-image "></i> Logo.png</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
-                  Contract-10_12_2014.docx</a>
-              </li>
-            </ul>
-            <div class="mt-5 mb-3">
-              <a href="#" class="btn btn-sm btn-primary">Add files</a>
-              <a href="{% url 'report_pdf' object.pk %}" class="btn btn-sm btn-info">View PDF</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /.card-body -->
-    </div>
-    <!-- /.card -->
+            <div class="card-body">
 
-  </section>
-  <!-- /.content -->
+              <div class="row">
+                <div class="col-12 col-md-12">
+                  <h3 class="text-primary"> {{object.type}}</h3>
+
+
+                  <div class="row">
+                    {% if object.result %}
+                    <div class="col-12 col-sm-4">
+                      <div class="info-box bg-light">
+                        <div class="info-box-content">
+                          <span class="info-box-text text-center text-muted">Result</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.result}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if object.date %}
+                    <div class="col-12 col-sm-4">
+                      <div class="info-box bg-light">
+                        <div class="info-box-content">
+                          <span class="info-box-text text-center text-muted">Date</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.date}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+                    {% endif %}
+                    {% if object.performed_by %}
+                    <div class="col-12 col-sm-4">
+                      <div class="info-box bg-light">
+                        <div class="info-box-content">
+                          <span class="info-box-text text-center text-muted">Performed By</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.performed_by}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+                    {% endif %}
+                  </div>
+
+
+
+                </div>
+                <div class="col-12 col-md-12">
+                  <h4 class="text-muted">Details</h4>
+                  <p>
+                    {{object.details}}
+                  </p>
+                  {% if object.result%}
+                  <div class="text-muted">
+                    <p class="text-sm">Result
+                      <b class="d-block">{{object.result}}</b>
+                    </p>
+                  </div>
+                  {% endif%}
+                  {% if object.result%}
+                  <div class="text-muted">
+                    <p class="text-sm">Desired Result
+                      <b class="d-block">{{object.desired_result}}</b>
+                    </p>
+                  </div>
+                  {% endif%}
+                  <div class="mt-5 mb-3">
+                    <a href="{% url 'report_pdf' object.pk %}" class="btn btn-sm btn-primary">View PDF</a>
+                    <a href="{% url 'report_update' object.pk %}" class="btn btn-sm btn-info">Edit Report</a>
+                    <a href="{% url 'report_delete' object.pk %}" class="btn btn-sm btn-danger">Delete Report</a>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        {% if object.client%}
+        <div class="col-md-4">
+          <!-- Default box -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Client Details</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="">
+                  {% if object.client.full_name %}
+                  <a href="{% url 'client_detail' object.client.pk %}">
+                    <h3 class="text-primary"> {{object.client.full_name}}</h3>
+                  </a>
+                  {% endif%}
+                  {% if object.client.dob%}
+                  <div class="text-muted">
+                    <p class="text-sm">Date of Birth
+                      <b class="d-block">{{object.client.dob}}</b>
+                    </p>
+                  </div>
+                  {% endif%}
+                  {% if object.client.sex %}
+                  <div class="text-muted">
+                    <p class="text-sm">Sex
+                      <b class="d-block">{{object.client.sex}}</b>
+                    </p>
+                  </div>
+                  {% endif%}
+                  {% if object.client.id_number %}
+                  <div class="text-muted">
+                    <p class="text-sm">ID Number
+                      <b class="d-block">{{object.client.id_number}}</b>
+                    </p>
+                  </div>
+                  {% endif%}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+      {% endif %}
+    </div>
+    <!-- /.row -->
+</div>
+
+</section>
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
