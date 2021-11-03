@@ -8,7 +8,14 @@
       <a href="../../index2.html" class="h1"><b>Lab</b> Reports</a>
     </div>
     <div class="card-body">
+      {% if request.user%}
+      <p class="login-box-msg">You are signed in as <b>{{request.user}}</b></p>
+        {% if not request.user.is_staff %}
+        <p class="login-box-msg">You don't have permission to access the system</b></p>
+        {% endif %}
+      {% else %}
       <p class="login-box-msg">Sign in to start your session</p>
+      {% endif %}
 
       <form method="POST" id='loginForm'>
         {% csrf_token %}
@@ -16,7 +23,7 @@
               {{form.username}}
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
+              <span class="fas fa-user"></span>
             </div>
           </div>
         </div>

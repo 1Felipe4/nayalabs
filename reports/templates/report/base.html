@@ -43,27 +43,6 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Navbar Search -->
-      <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -76,7 +55,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="../../index3.html" class="brand-link">
+    <a href="{% url 'dashboard' %}" class="brand-link">
       {% comment %} <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> {% endcomment %}
       <span class="brand-text font-weight-light">Lab Reports</span>
     </a>
@@ -89,19 +68,6 @@
           <a href="#" class="d-block">{{user.username}}</a>
         </div>
       </div>
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -125,7 +91,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'report_new' %}" class="nav-link">
+                <a href="{% url 'report_new_client_new' %}" class="nav-link">
                   <i class="fas fa-plus nav-icon"></i>
                   <p>Add New</p>
                 </a>
@@ -137,7 +103,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link">
+                <a href="{% url 'report_advance_search' %}" class="nav-link">
                   <i class="fa fa-search nav-icon"></i>
                   <p>Advanced Search</p>
                 </a>
@@ -238,7 +204,7 @@
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 1.0.0
     </div>
-    <strong>Copyright &copy; 2021 <a href="">Rodrigo Sanchez</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2021 <a href="">Nigel George</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->

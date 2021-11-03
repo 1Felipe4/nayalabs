@@ -55,18 +55,30 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="{{ form.first_name.id_for_label }}">Name</label>
+                <label for="{{ form.name.id_for_label }}">Name</label>
                 {{ form.name}}
-                <span id="" class="text-danger text-sm">{{form.first_name.errors}}</span>
+                <span id="" class="text-danger text-sm">{{form.name.errors}}</span>
               </div>
 
               <div class="form-group">
-                <label for="{{ form.last_name.id_for_label }}" class='d-block'>Logo</label>
-                {{ form.logo}}
-                <span id="" class="text-danger text-sm">{{form.last_name.errors}}</span>
+                <label for="{{ form.header.id_for_label }}" class='d-block'>Letter Head</label>
+                {{ form.header}}
+                <span id="" class="text-danger text-sm">{{form.header.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.footer.id_for_label }}" class='d-block'>Footer</label>
+                {{ form.footer}}
+                <span id="" class="text-danger text-sm">{{form.footer.errors}}</span>
               </div>
               
+            <div class="form-group">
+                <label for="{{ form.stamp.id_for_label }}" class='d-block'>Stamps</label>
+                {{ form.stamp}}
+                <span id="" class="text-danger text-sm">{{form.stamp.errors}}</span>
+              </div>
             </div>
+
             <!-- /.card-body -->
           </div>
           <!-- /.card -->

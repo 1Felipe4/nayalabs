@@ -1,0 +1,82 @@
+{%extends 'accounts/base.html'%}
+{% block 'content' %}
+<div class="hold-transition login-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="../../index2.html" class="h1"><b>Lab</b> Reports</a>
+    </div>
+    <div class="card-body">
+      {% if request.user%}
+      <p class="login-box-msg">You are signed in as <b>{{request.user}}</b></p>
+        {% if not request.user.is_staff %}
+        <p class="login-box-msg">You don't have permission to access the system</b></p>
+        {% endif %}
+      {% else %}
+      <p class="login-box-msg">Sign in to start your session</p>
+      {% endif %}
+
+
+      <a href="{% url 'login' %}" class="btn btn-primary btn-block">Sign In</a>
+
+
+      {% comment %} <p class="mb-1">
+        <a href="forgot-password.html">I forgot my password</a>
+      </p> {% endcomment %}
+      <p class="m-1">
+        <a href="{% url 'register'%}" class="text-center">Register a new membership</a>
+      </p>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+</div>
+
+
+{% endblock %}
+
+{% block 'script' %}
+<script>
+
+{% comment %} $(function () {
+  $.validator.setDefaults({
+    submitHandler: function () {
+      $('#loginForm').submit()
+    }
+  });
+  $('#loginForm').validate({
+    rules: {
+      username: {
+        required: true,
+      },
+      password: {
+        required: true,
+      },
+    },
+    messages: {
+      username: {
+        required: "Please enter a username",
+      },
+      password: {
+        required: "Please provide a password",
+      },
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.input-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+}); {% endcomment %}
+</script>
+
+{% endblock 'script' %}

@@ -36,6 +36,11 @@
         <h3 class="card-title">{{object.full_name}}</h3>
 
         <div class="card-tools">
+          <a href="{% url 'client_new' %}">
+          <button type="button" class="btn btn-tool" title='Add New Client'>
+            <i class="fas fa-pen"></i>
+          </button>
+          </a>
           <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
             <i class="fas fa-minus"></i>
           </button>
@@ -82,8 +87,7 @@
             <ul class="list-unstyled">
               {% for report in reports %}
               <li>
-                <a href="{% url 'report_detail' report.pk%}" class="btn-link text-secondary"><i class="far fa-fw fa-clipboard"></i>
-                {{report.type}} - {{report.date}}</a>
+                <a href="{% url 'report_detail' report.pk%}" class="btn-link text-secondary"><i class="far fa-fw fa-clipboard"></i>{{report}}</a>
               </li>
               {% endfor %}
             </ul>

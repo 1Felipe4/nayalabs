@@ -1,0 +1,160 @@
+{% extends 'report/base.html' %}
+
+{% load static %}
+
+{% block 'head'%}
+
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+
+<!-- Daterange picker -->
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+
+{% endblock 'head' %}
+
+{% block 'content' %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Reports Advanced Search</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'report_list'%}">Reports</a></li>
+            <li class="breadcrumb-item active">Advanced Search</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-9">
+          <form action="{% url 'report_list'%}">
+            <div class="card card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Advanced Search</h5>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="{{ form.test_request.id_for_label }}">Test Request</label>
+                  {{ form.test_request}}
+                  <span id="" class="text-danger text-sm">{{form.test_request.errors}}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.result.id_for_label }}">Result</label>
+                  {{ form.result}}
+                  <span id="" class="text-danger text-sm">{{form.result.errors}}</span>
+                </div>
+                
+                <div class="form-group">
+                  <label for="{{ form.desired_result.id_for_label }}">Desired Result</label>
+                  {{ form.desired_result}}
+                  <span id="" class="text-danger text-sm">{{form.desired_result.errors}}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.details.id_for_label }}">Details</label>
+                  {{ form.details}}
+                  <span id="" class="text-danger text-sm">{{form.details.errors}}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.print_date.id_for_label }}">Print Date:</label>
+                  <div class="input-group date" id="reportdatetime" data-target-input="nearest">
+                      {{ form.print_date}}
+                      <div class="input-group-append" data-target="#reportdatetime" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+                  <span id="" class="text-danger text-sm">{{form.print_date.errors}}</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.client.id_for_label }}">Client</label>
+                  {{ form.client}}
+                  <span id="" class="text-danger text-sm">{{form.client.errors}}</span>
+                </div>
+                <div class="form-group">
+                  <label for="{{ form.performed_by.id_for_label }}">Performed By</label>
+                  {{ form.performed_by}}
+                  <span id="" class="text-danger text-sm">{{form.performed_by.errors}}</span>
+                </div>
+                <div class="form-group">
+                  <label for="{{ form.lab.id_for_label }}">Lab</label>
+                  {{ form.lab}}
+                  <span id="" class="text-danger text-sm">{{form.lab.errors}}</span>
+                </div>
+              </div>
+              <div class="text-center">
+                  <button class='btn btn-primary btn-lg'> Search Reports </button>
+              </div>
+              <div class='card-footer'>
+                {{ form.non_field_errors }}
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- ./col -->
+
+      <!-- /.row -->
+
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+
+{% endblock 'content'%}
+
+
+{% comment %}
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper --> {% endcomment %}
+
+{% block 'script' %}
+
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- ChartJS -->
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+<!-- daterangepicker -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{% static 'js/pages/dashboard.js' %}"></script>
+<!-- Page specific script -->
+<script>
+  $(function () {
+    $('#reportdatetime').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD" });
+
+  });
+</script>
+
+{% endblock 'script' %}

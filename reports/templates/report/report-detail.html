@@ -48,10 +48,13 @@
 
               <div class="row">
                 <div class="col-12 col-md-12">
-                  <h3 class="text-primary"> {{object.type}}</h3>
+                  <h3 class="text-primary"> {{object.test_request}}</h3>
 
 
                   <div class="row">
+                    {% if object.lab.header %}
+                    <img src="{{object.lab.header.url}}" style="" class="img-fluid" alt="Responsive image">
+                    {% endif %}
                     {% if object.result %}
                     <div class="col-12 col-sm-4">
                       <div class="info-box bg-light">
@@ -62,12 +65,12 @@
                       </div>
                     </div>
                     {% endif %}
-                    {% if object.date %}
+                    {% if object.print_date %}
                     <div class="col-12 col-sm-4">
                       <div class="info-box bg-light">
                         <div class="info-box-content">
-                          <span class="info-box-text text-center text-muted">Date</span>
-                          <span class="info-box-number text-center text-muted mb-0">{{object.date}}</span>
+                          <span class="info-box-text text-center text-muted">Print Date</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.print_date}}</span>
                         </div>
                       </div>
 
@@ -130,6 +133,11 @@
               <h3 class="card-title">Client Details</h3>
 
               <div class="card-tools">
+                <a href="{% url 'report_new_client_new' %}">
+                <button type="button" class="btn btn-tool" title='Add New Report and Client'>
+                  <i class="fas fa-pen"></i>
+                </button>
+                </a>
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                   <i class="fas fa-minus"></i>
                 </button>

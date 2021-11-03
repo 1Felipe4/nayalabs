@@ -6,6 +6,7 @@
 
 <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
 <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
 
 {% endblock 'head'%}
 
@@ -63,9 +64,9 @@
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="{{ form.type.id_for_label }}">Name</label>
-                {{ form.type}}
-                <span id="" class="text-danger text-sm">{{form.type.errors}}</span>
+                <label for="{{ form.test_request.id_for_label }}">Test Request</label>
+                {{ form.test_request}}
+                <span id="" class="text-danger text-sm">{{form.test_request.errors}}</span>
               </div>
 
               <div class="form-group">
@@ -86,19 +87,84 @@
                 <span id="" class="text-danger text-sm">{{form.details.errors}}</span>
               </div>
 
-                  <div class="form-group">
-                    <label for="{{ form.date.id_for_label }}">Date and time:</label>
-                    <div class="input-group date" id="reportdatetime" data-target-input="nearest">
-                        {{ form.date}}
-                        <div class="input-group-append" data-target="#reportdatetime" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
+              <div class="form-group">
+                <label for="{{ form.order_type.id_for_label }}">Order Type</label>
+                {{ form.order_type}}
+                <span id="" class="text-danger text-sm">{{form.order_type.errors}}</span>
+              </div>
+
+
+               <div class="form-group">
+                <label for="{{ form.insurance.id_for_label }}">Insurance</label>
+                {{ form.insurance}}
+                <span id="" class="text-danger text-sm">{{form.insurance.errors}}</span>
+              </div>
+
+
+              <div class="form-group">
+                <label for="{{ form.company.id_for_label }}">Company</label>
+                {{ form.company}}
+                <span id="" class="text-danger text-sm">{{form.company.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.doc_id.id_for_label }}">Doctor ID</label>
+                {{ form.doc_id}}
+                <span id="" class="text-danger text-sm">{{form.doc_id.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.doctor.id_for_label }}">Doctor</label>
+                {{ form.doctor}}
+                <span id="" class="text-danger text-sm">{{form.doctor.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.department.id_for_label }}">Department</label>
+                {{ form.department}}
+                <span id="" class="text-danger text-sm">{{form.department.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.branch_no.id_for_label }}">Branch Number</label>
+                {{ form.branch_no}}
+                <span id="" class="text-danger text-sm">{{form.branch_no.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ form.print_date.id_for_label }}">Print Date:</label>
+                <div class="input-group date" id="report_print_date" data-target-input="nearest">
+                    {{ form.print_date}}
+                    <div class="input-group-append" data-target="#report_print_date" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
-                    <span id="" class="text-danger text-sm">{{form.date.errors}}</span>
+                </div>
+                <span id="" class="text-danger text-sm">{{form.print_date.errors}}</span>
+              </div>
+            
+              <div class="form-group">
+                <label for="{{ form.collect_date.id_for_label }}">Collect Date:</label>
+                <div class="input-group date" id="report_collect_date" data-target-input="nearest">
+                    {{ form.collect_date}}
+                    <div class="input-group-append" data-target="#report_collect_date" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                <span id="" class="text-danger text-sm">{{form.collect_date.errors}}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="{{ form.unit_date.id_for_label }}">Unit Date:</label>
+                <div class="input-group date" id="report_unit_date" data-target-input="nearest">
+                    {{ form.unit_date}}
+                    <div class="input-group-append" data-target="#report_unit_date" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                <span id="" class="text-danger text-sm">{{form.unit_date.errors}}</span>
+              </div>
 
-                  </div>
-
-              {% if not client %}
+              {% if not client_form %}
               <div class="form-group">
                 <label for="{{ form.client.id_for_label }}">Client</label>
                 {{ form.client}}
@@ -119,14 +185,18 @@
 
             </div>
             <!-- /.card-body -->
+            <div class='card-footer'>
+              {{ form.non_field_errors }}
+            </div>
           </div>
           <!-- /.card -->
         </div>
-        {% comment %} <div class="col-md-6">
-          <div class="card card-secondary">
-            <div class="card-header">
-              <h3 class="card-title">Brand Image</h3>
+        {% if client_form %}
+        <div class="col-md-6">
 
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Client Details</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                   <i class="fas fa-minus"></i>
@@ -134,27 +204,51 @@
               </div>
             </div>
             <div class="card-body">
-              {% if object.pic %}
-              <img src="{{object.pic.url}}" style="height: 100px" alt="" class="img-thumbnail">
-              {% endif %}
               <div class="form-group">
-                <label for="exampleInputFile">Image</label>
-                <div class="input-group">
-                  <div class="custom-file">
-                    <label class="custom-file-label" for="{{ form.pic.id_for_label }}">Choose file</label>
-                    {{ form.pic}}
-                  </div>
-                </div>
-                <span id="" class="text-danger text-sm">{{form.pic.errors}}</span>
-
+                <label for="{{ client_form.first_name.id_for_label }}">First Name</label>
+                {{ client_form.first_name}}
+                <span id="" class="text-danger text-sm">{{client_form.first_name.errors}}</span>
               </div>
-            </div>
 
+              <div class="form-group">
+                <label for="{{ client_form.last_name.id_for_label }}">Last Name</label>
+                {{ client_form.last_name}}
+                <span id="" class="text-danger text-sm">{{client_form.last_name.errors}}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="{{ client_form.id_number.id_for_label }}">ID Number</label>
+                {{ client_form.id_number}}
+                <span id="" class="text-danger text-sm">{{client_form.id_number.errors}}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="{{ client_form.sex.id_for_label }}">Sex</label>
+                {{ client_form.sex}}
+                <span id="" class="text-danger text-sm">{{client_form.sex.errors}}</span>
+              </div>    
+              
+              <div class="form-group">
+                  <label for="{{ client_form.dob.id_for_label }}"> Date:</label>
+                    <div class="input-group date" id="clientdob" data-target-input="nearest">
+                        {{ client_form.dob}}
+                        <div class="input-group-append" data-target="#clientdob" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                        <span id="" class="text-danger text-sm">{{client_form.dob.errors}}</span>
+
+                    </div>
+              </div>
+              
+            </div>
             <!-- /.card-body -->
+            <div class= 'card-footer'>
+                  {{ client_form.non_field_errors }}
+              </div>
           </div>
           <!-- /.card -->
-        </div> {% endcomment %}
-        {{ form.non_field_errors }}
+        </div>
+        {% endif %}
 
       </div>
       <div class="row">
@@ -184,11 +278,19 @@
 <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
 <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
 <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
 
 <!-- Page specific script -->
 <script>
   $(function () {
-    $('#reportdatetime').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD HH:mm:ss" });
+    // Summernote
+    $('#summernote').summernote()
+    
+    $('#report_print_date').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD HH:mm:ss" });
+    $('#report_collect_date').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD HH:mm:ss" });
+    $('#report_unit_date').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD HH:mm:ss" });
+    $('#clientdob').datetimepicker({ format: "YYYY-MM-DD" });
+
   });
 </script>
 

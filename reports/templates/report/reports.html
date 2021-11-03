@@ -3,6 +3,13 @@
 {% load static %}
 {% load humanize %}
 
+{% block 'head'%}
+
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+
+{% endblock 'head'%}
+
 {% block 'content' %}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -19,19 +26,66 @@
             <li class="breadcrumb-item active">Reports</li>
           </ol>
         </div>
+        
       </div>
     </div><!-- /.container-fluid -->
   </section>
 
   <!-- Main content -->
   <section class="content">
+  <div class="row">
+        <div class="col">
+          <!-- small box -->
+          <div class="small-box bg-gradient-info">
+            <div class="inner">
+              <h4>Report Search </h4>
 
+              <form action="{% url 'report_list'%}">
+                <div class="row">
+                  <div class="col-3">
+                    <div class="input-group date" id="reportdatetime" data-target-input="nearest">
+                      {{ form.print_date}}
+                      <div class="input-group-append" data-target="#reportdatetime" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    {{form.client}}
+                  </div>
+                  <div class="col-5">
+                    <div class="input-group">
+                      {{form.test_request}}
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn btn-default">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            {% comment %} <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div> {% endcomment %}
+            <a href="{% url 'report_advance_search'%}" class="small-box-footer">Advanced Search <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- ./row -->
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Reports</h3>
 
         <div class="card-tools">
+            <a href="{% url 'report_new_client_new' %}">
+          <button type="button" class="btn btn-tool" title='Add New Report and Client'>
+            <i class="fas fa-pen"></i>
+          </button>
+          </a>
           <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
             <i class="fas fa-minus"></i>
           </button>
@@ -66,7 +120,7 @@
             <tr>
               <td>
                 <a>
-                  {{object.type}}
+                  {{object.test_request}}
                 </a>
               </td>
               <td>
@@ -76,7 +130,7 @@
                 {{object.client.full_name}}               
               </td>
               <td>
-                {{object.date}}               
+                {{object.print_date}}               
               </td>
               <td class="project-actions">
                 <a class="btn btn-primary btn-sm" href="{%url 'report_detail' object.pk%}">
@@ -109,3 +163,17 @@
 </div>
 <!-- /.content-wrapper -->
 {% endblock %}
+
+{% block 'script'%}
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+<!-- Page specific script -->
+<script>
+  $(function () {
+    $('#reportdatetime').datetimepicker({ icons: { time: 'far fa-clock' }, format: "YYYY-MM-DD" });
+  });
+</script>
+
+{% endblock 'script' %}  

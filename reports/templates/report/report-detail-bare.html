@@ -51,21 +51,22 @@
       <div class="card-body">
         <div class="row">
           <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+
             <h3 class="text-primary"> {{object.type}}</h3>
-            {%if object.result%}
+            {% if object.result%}
               <div class="text-muted">
                 <p class="text-sm">Result
                   <b class="d-block">{{object.result}}</b>
                 </p>
                 </div>
-            {%endif%}
-              {%if object.result%}
+            {% endif%}
+              {% if object.result%}
               <div class="text-muted">
                 <p class="text-sm">Desired Result
                   <b class="d-block">{{object.desired_result}}</b>
                 </p>
               </div>
-            {%endif%}
+            {% endif%}
             </div>
           </div>
           <div class="col-12 col-md-12 col-lg-8 order-1 order-md-2">

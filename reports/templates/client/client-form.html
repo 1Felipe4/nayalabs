@@ -94,15 +94,16 @@
                         <span id="" class="text-danger text-sm">{{form.dob.errors}}</span>
 
                     </div>
-                </div>
-
+              </div>
+              <div class= 'card-footer'>
+                  {{ form.non_field_errors }}
+              </div>
             </div>
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
         </div>
 
-        {{ form.non_field_errors }}
 
       </div>
       <div class="row">

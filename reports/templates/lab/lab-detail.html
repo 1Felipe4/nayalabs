@@ -34,6 +34,11 @@
         <h3 class="card-title">Lab Detail</h3>
 
         <div class="card-tools">
+          <a href="{% url 'lab_new' %}">
+          <button type="button" class="btn btn-tool" title='Add New Lab'>
+            <i class="fas fa-pen"></i>
+          </button>
+          </a>
           <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
             <i class="fas fa-minus"></i>
           </button>
@@ -47,7 +52,11 @@
         
           <div class="col-md-6 col-lg-6">
             <h3 class="text-primary"> {{object.name}}</h3>
-            <img src="{{object.logo.url}}" style="width: 200px" class="img-thumbnail" alt="Responsive image">
+            <img src="{{object.header.url}}" style="" class="img-fluid" alt="Responsive image">
+
+            {% if object.footer %}
+            <img src="{{object.footer.url}}" style="" class="img-fluid" alt="Responsive image">
+            {% endif %}
 
             <div class="mt-5 mb-3">
                 <a href="{% url 'lab_update' object.pk %}" class="btn btn-sm btn-info">Edit</a>
@@ -60,8 +69,7 @@
             <ul class="list-unstyled">
               {% for report in reports %}
               <li>
-                <a href="{% url 'report_detail' report.pk%}" class="btn-link text-secondary"><i class="far fa-fw fa-clipboard"></i>
-                {{report.type}} - {{report.date}}</a>
+                <a href="{% url 'report_detail' report.pk%}" class="btn-link text-secondary"><i class="far fa-fw fa-clipboard"></i>{{report}}</a>
               </li>
               {% endfor %}
             </ul>

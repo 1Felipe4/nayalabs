@@ -32,6 +32,11 @@
         <h3 class="card-title">Labs</h3>
 
         <div class="card-tools">
+          <a href="{% url 'lab_new' %}">
+          <button type="button" class="btn btn-tool" title='Add New Lab'>
+            <i class="fas fa-pen"></i>
+          </button>
+          </a>
           <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
             <i class="fas fa-minus"></i>
           </button>
@@ -48,7 +53,7 @@
                 Name
               </th>
               <th>
-              Logo
+              Header
               </th>
               <th style="width: 20%">
                 Action
@@ -64,8 +69,8 @@
                 </a>
               </td>
               <td>
-              {% if object.logo %}
-                <img src="{{object.logo.url}}" style="height: 50px" class="img-thumbnail" alt="Responsive image">
+              {% if object.header %}
+                <img src="{{object.header.url}}" style="" class="img-thumbnail" alt="Responsive image">
               {% else %}
                 No Image
               {% endif %}

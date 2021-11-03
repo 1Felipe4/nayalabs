@@ -7,38 +7,51 @@ from django.urls import reverse
 
 # Create your models here.
 class Report(models.Model):
-    type = models.CharField(max_length=512)
+    test_request = models.CharField(max_length=512)
     result = models.CharField(max_length=255)
     desired_result = models.CharField(max_length=255)
     details = models.TextField()
-    date = models.DateTimeField(default=timezone.now)
-    client = models.ForeignKey("reports.Client", verbose_name=_("Client"), on_delete=models.CASCADE)
+    print_date = models.DateTimeField(default=timezone.now)
+    client = models.ForeignKey("reports.Client", verbose_name=_("Client"), null=True, on_delete=models.SET_NULL)
     performed_by = models.ForeignKey("reports.Tester", verbose_name=_("Performed By"), null=True, blank=False , on_delete=SET_NULL)
     lab = models.ForeignKey("reports.Lab", verbose_name=_("Lab"), on_delete=models.CASCADE)
-    file = models.FileField(_("File"), upload_to=None, max_length=100, null=True)
+    collect_date = models.DateTimeField(default=timezone.now)
+    order_type = models.CharField(max_length=255, default='EXTERNAL')
+    insurance = models.CharField(max_length=255, default='PARTICULAR')
+    company =  models.CharField(max_length=512, default='OCCUPATIONAL HEALTH SOLUTIONS')
+    doc_id = models.CharField(max_length=255, null=True, blank=True)
+    doctor = models.CharField(max_length=512, null=True, blank=True)
+    unit_date = models.DateTimeField(default=timezone.now)
+    department = models.CharField(max_length=255, default='IMMUNO')
+    branch_no = models.CharField(max_length=3, null=True, blank=True)
 
-    
     def get_absolute_url(self):
         return reverse('report_detail', kwargs={'pk': self.pk})
           
     def __str__(self):
-        name = self.type
+        name = self.test_request
         if(self.client):
             name = f'{self.client.full_name} {name}' 
-        if(self.date):
-            name = f'{name} - {self.date.date()}'   
+        if(self.print_date):
+            name = f'{name} - {self.print_date.date()}'   
         return name  
 class Client(models.Model):
     first_name = models.CharField(_("First Name"), max_length=255)
     last_name = models.CharField(_("Last Name"), max_length=255)
     sex = models.CharField(_('Sex'), max_length=100)
-    id_number = models.CharField(_('ID Number'), max_length=255, unique=True)
+    id_number = models.CharField(_('ID Number'), max_length=255, null=True, blank=True)
     dob = models.DateField(_("Date of Birth"), auto_now=False, auto_now_add=False)
 
     @property
     def full_name(self):
         name = self.first_name + " " + self.last_name
-        return name.strip()  
+        return name.strip()
+
+    @property
+    def age(self):
+        today = datetime.date.today()
+        years = today.year - self.dob.year - ((today.month, today.day) < (self.dob.month, self.dob.day))
+        return f'{years} Years'
 
     def __str__(self):
         return self.full_name 
@@ -49,11 +62,17 @@ class Client(models.Model):
 class Tester(models.Model):
     first_name = models.CharField(_("First Name"), max_length=255)
     last_name = models.CharField(_("Last Name"), max_length=255)
-
+    signature = models.ImageField(_("Signature"), upload_to='signatures', height_field=None, width_field=None, max_length=None, null=True)
     @property
     def full_name(self):
         name = self.first_name + " " + self.last_name
         return name.strip()  
+
+    @property
+    def prepared_by(self):
+        name = f'{self.first_name[0]}{self.last_name}'.upper()
+        return name.strip()
+
 
     def __str__(self):
         return self.full_name 
@@ -63,8 +82,9 @@ class Tester(models.Model):
 
 class Lab(models.Model):
     name = models.CharField(_("Name"), max_length=512)
-    logo = models.ImageField(_("Logo"), upload_to=None, height_field=None, width_field=None, max_length=None)
-   
+    header = models.ImageField(_("Header"), upload_to='headers', height_field=None, width_field=None, max_length=None, null=True)
+    footer = models.ImageField(_("Footer"), upload_to='footers', height_field=None, width_field=None, max_length=None, null=True, blank=True)
+    stamp = models.ImageField(_("Stamp"), upload_to='stamps', height_field=None, width_field=None, max_length=None, null=True)
 
     def __str__(self):
         return self.name 

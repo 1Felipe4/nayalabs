@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{%extends 'accounts/base.html'%}
+{% extends 'accounts/base.html'%}
 {% block 'content' %}
 <div class="hold-transition register-page">
   <div class="register-box">
@@ -14,7 +14,7 @@
         <form method="post">
           {% csrf_token %}
           <div class="input-group mb-3">
-            {{form.first_name}}
+            {{form.username}}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -22,10 +22,18 @@
             </div>
           </div>
           <div class="input-group mb-3">
+            {{form.first_name}}
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-pen"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
             {{form.last_name}}
             <div class="input-group-append">
               <div class="input-group-text">
-                <span class="fas fa-user"></span>
+                <span class="fas fa-pen"></span>
               </div>
             </div>
           </div>

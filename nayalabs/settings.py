@@ -88,6 +88,30 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'admintrinipost_lab_reports',
+#         'USER': 'admintrinipost_lab_user',
+#         'PASSWORD': 'Default6019!',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'sql_mode': 'STRICT_ALL_TABLES',
+#         },
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'admintrinipost_lab_reports',
+#         'USER': 'admintrinipost_lab_user',
+#         'PASSWORD': 'Default6019!',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -131,4 +155,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 SERVE_QR_CODE_IMAGE_PATH = 'qr-code-image/'
 
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
