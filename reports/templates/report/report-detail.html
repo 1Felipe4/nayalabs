@@ -95,7 +95,9 @@
                 <div class="col-12 col-md-12">
                   <h4 class="text-muted">Details</h4>
                   <p>
+                  {% autoescape off %}
                     {{object.details}}
+                  {% endautoescape %}
                   </p>
                   {% if object.result%}
                   <div class="text-muted">

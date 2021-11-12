@@ -1,6 +1,10 @@
+import os
+from django.conf import settings
+from reportlab.lib.utils import ImageReader
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus.doctemplate import PageTemplate
+from PIL import Image, ImageDraw
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 from reportlab.lib.units import cm
@@ -8,20 +12,32 @@ from reportlab.platypus.frames import Frame
 from reportlab.lib import pagesizes
 from reportlab.platypus.paragraph import Paragraph
 from functools import partial
-PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as pdfImage
+defaultPageSize = letter
+PAGE_HEIGHT=defaultPageSize[0]
+PAGE_WIDTH=defaultPageSize[0]
 
 
+def height(img, width):
+    divisor = img.width/width
+    return img.height/divisor
 
 def header(canvas, doc, content):
     canvas.saveState()
     w, h = content.wrap(doc.width, doc.topMargin)
-    content.drawOn(canvas, doc.leftMargin, doc.height + doc.bottomMargin + doc.topMargin - h)
+    content.drawOn(canvas, (0 * cm) , (doc.height + doc.bottomMargin) - (.8 * cm)) #doc.height + doc.bottomMargin + doc.topMargin - h)
+    path = os.path.join(settings.STATIC_ROOT,'media\\template_ref.png')
+    img = Image.open(path)
+    draw_img = ImageReader(img)
+    # canvas.drawImage(draw_img, 0, 0, 22*cm, height(img, 22*cm))
+
     canvas.restoreState()
 
 def footer(canvas, doc, content):
     canvas.saveState()
     w, h = content.wrap(doc.width, doc.bottomMargin)
-    content.drawOn(canvas, .3*cm, h)
+    content.drawOn(canvas, .3*cm, h+(-2*cm))
     canvas.restoreState()
 
 def header_and_footer(canvas, doc, header_content, footer_content):
@@ -34,7 +50,7 @@ filename = "out.pdf"
 
 PAGESIZE = pagesizes.portrait(pagesizes.A4)
 
-pdf = SimpleDocTemplate(filename, pagesize=PAGESIZE, 
+pdf = SimpleDocTemplate(filename, pagesize=letter, 
         leftMargin = 2.2 * cm, 
         rightMargin = 2.2 * cm,
         topMargin = 1.5 * cm, 
@@ -55,6 +71,7 @@ pdf.build([Paragraph("This is content")])
 Title = "Lab Report"
 pageinfo = "Lab Report"
 def myFirstPage(canvas, doc):
+    print('hereee')
     canvas.saveState()
     canvas.setFont('Times-Bold',16)
     canvas.drawCentredString(PAGE_WIDTH/2.0, PAGE_HEIGHT-108, Title)
@@ -64,8 +81,14 @@ def myFirstPage(canvas, doc):
 
 def myLaterPages(canvas, doc):
     canvas.saveState()
+    # Create the PDF object, using the buffer as its "file."
+    img = Image.open(settings.STATIC_ROOT+'media/template_ref.png')
+    draw_img = ImageReader(img)
+    
+    canvas.drawImage(draw_img)
     canvas.setFont('Times-Roman',9)
     canvas.drawString(inch, 0.75 * inch, "Page %d %s" % (doc.page, pageinfo))
+
     canvas.restoreState()
 
 def go():

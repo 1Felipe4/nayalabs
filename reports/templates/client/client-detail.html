@@ -33,7 +33,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">{{object.full_name}}</h3>
+        <h3 class="card-title">Client Details</h3>
 
         <div class="card-tools">
           <a href="{% url 'client_new' %}">
@@ -52,7 +52,41 @@
       <div class="card-body">
         <div class="row">
           <div class="col-6 col-md-6 col-lg-8">
-            <h4 class="text-muted">{{object.full_name}}</h4>
+            <h3 class="text-primary"> {{object.full_name}}</h3>
+             <div class="row">
+                    {% if object.sex %}
+                    <div class="col-12 col-sm-4">
+                      <div class="info-box bg-light">
+                        <div class="info-box-content">
+                          <span class="info-box-text text-center text-muted">Sex</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.sex}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if object.dob %}
+                    <div class="col-12 col-sm-4">
+                      <div class="info-box bg-light">
+                        <div class="info-box-content">
+                          <span class="info-box-text text-center text-muted">Date of Birth</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.dob}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+                    {% endif %}
+                    {% if object.age %}
+                    <div class="col-12 col-sm-4">
+                      <div class="info-box bg-light">
+                        <div class="info-box-content">
+                          <span class="info-box-text text-center text-muted">Age</span>
+                          <span class="info-box-number text-center text-muted mb-0">{{object.age}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+                    {% endif %}
+                  </div>
             {% if object.id_number %}
               <div class="text-muted">
                 <p class="text-sm">ID Number
@@ -60,20 +94,6 @@
                 </p>
                 </div>
             {% endif%}
-              {% if object.dob %}
-              <div class="text-muted">
-                <p class="text-sm">Date Of Birth
-                  <b class="d-block">{{object.dob}}</b>
-                </p>
-              </div>
-            {% endif %}
-            {% if object.sex %}
-              <div class="text-muted">
-                <p class="text-sm">Sex
-                  <b class="d-block">{{object.sex}}</b>
-                </p>
-              </div>
-            {% endif %}
             <div class="mt-5 mb-3">
               <a href="{% url 'client_update' object.pk%}" class="btn btn-sm btn-info">Edit Client Details</a>
               <a href="{% url 'client_delete' object.pk%}" class="btn btn-sm btn-danger">Delete Client</a>

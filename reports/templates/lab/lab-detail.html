@@ -55,7 +55,11 @@
             <img src="{{object.header.url}}" style="" class="img-fluid" alt="Responsive image">
 
             {% if object.footer %}
-            <img src="{{object.footer.url}}" style="" class="img-fluid" alt="Responsive image">
+              <img src="{{object.footer.url}}" style="" class="img-fluid" alt="Responsive image">
+            {% endif %}
+
+            {% if object.stamp %}
+              <img src="{{object.stamp.url}}" style="" class="img-fluid" alt="Responsive image">
             {% endif %}
 
             <div class="mt-5 mb-3">
