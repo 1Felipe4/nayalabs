@@ -27,17 +27,20 @@ def header(canvas, doc, content):
     canvas.saveState()
     w, h = content.wrap(doc.width, doc.topMargin)
     content.drawOn(canvas, (0 * cm) , (doc.height + doc.bottomMargin) - (.8 * cm)) #doc.height + doc.bottomMargin + doc.topMargin - h)
-    path = os.path.join(settings.STATIC_ROOT,'media\\template_ref.png')
-    img = Image.open(path)
-    draw_img = ImageReader(img)
-    # canvas.drawImage(draw_img, 0, 0, 22*cm, height(img, 22*cm))
+    # path = os.path.join(settings.STATIC_ROOT,'media\\template_ref.png')
+    # print(settings.STATIC_ROOT)
+    # img = Image.open(path)
+    # draw_img = ImageReader(img)
+    # # Draw PDF Page Reference
+    # img_width = 21.5*cm
+    # canvas.drawImage(draw_img, 0, 0, img_width, height(img, img_width))
 
     canvas.restoreState()
 
 def footer(canvas, doc, content):
     canvas.saveState()
     w, h = content.wrap(doc.width, doc.bottomMargin)
-    content.drawOn(canvas, .3*cm, h+(-2*cm))
+    content.drawOn(canvas, -.2 *cm, .25*cm)
     canvas.restoreState()
 
 def header_and_footer(canvas, doc, header_content, footer_content):
@@ -82,10 +85,10 @@ def myFirstPage(canvas, doc):
 def myLaterPages(canvas, doc):
     canvas.saveState()
     # Create the PDF object, using the buffer as its "file."
-    img = Image.open(settings.STATIC_ROOT+'media/template_ref.png')
-    draw_img = ImageReader(img)
+    # img = Image.open(settings.STATIC_ROOT+'media/template_ref.png')
+    # draw_img = ImageReader(img)
     
-    canvas.drawImage(draw_img)
+    # canvas.drawImage(draw_img)
     canvas.setFont('Times-Roman',9)
     canvas.drawString(inch, 0.75 * inch, "Page %d %s" % (doc.page, pageinfo))
 

@@ -46,7 +46,6 @@ class ReportForm(forms.ModelForm):
             self.fields[key].widget.attrs.update({'class': 'form-control'})
         self.fields['print_date'].widget.attrs.update({ 'class': 'form-control datetimepicker-input', 'data-target': '#report_print_date'})
         self.fields['collect_date'].widget.attrs.update({ 'class': 'form-control datetimepicker-input', 'data-target': '#report_collect_date'})
-        self.fields['unit_date'].widget.attrs.update({ 'class': 'form-control datetimepicker-input', 'data-target': '#report_unit_date'})
         self.fields['details'].widget.attrs.update({ 'id': 'summernote'})
 
 class ReportExClientForm(ReportForm):

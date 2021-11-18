@@ -3,12 +3,13 @@ from functools import partial
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from reportlab.lib.utils import ImageReader
-from reportlab.lib.units import cm
+from reportlab.lib.units import cm, mm
 from reportlab.platypus.doctemplate import PageTemplate
 from reportlab.platypus.frames import Frame
 from reportlab.platypus.tables import Table, TableStyle
 from reports.pdf import render_to_pdf
-from reports.pdf_template import PAGESIZE, header_and_footer, myFirstPage, myLaterPages
+from reports.pdf_template import header_and_footer, myFirstPage, myLaterPages
+#from reports.pdf_template import PAGESIZE, header_and_footer, myFirstPage, myLaterPages
 from .forms import ClientBasicFilterForm, ClientForm, LabForm, ReportAdvanceFilterForm, ReportBasicFilterForm, ReportExClientForm, ReportForm, ReportKeywordFilterForm, TesterForm, UserRegisterForm
 from .models import Client, Lab, Report, Tester
 from django.views.generic import (
@@ -29,7 +30,7 @@ from PIL import Image, ImageDraw
 from reportlab.lib import colors, utils
 import qrcode
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as pdfImage
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 from django.urls import reverse
@@ -446,40 +447,7 @@ def gen_qr(text, path):
 
     return savedqr
 
-# def pdf_view(request, pk):
-#     # Create a file-like buffer to receive PDF data.
-#     buffer = io.BytesIO()
-#     obj = get_object_or_404(Report, pk=pk)     
-
-#     # Create the PDF object, using the buffer as its "file."
-#     p = canvas.Canvas(buffer)
-#     img = Image.open(obj.lab.logo)
-#     logo = ImageReader(img)
-#     host = request.META['HTTP_HOST'] + request.path
-#     qr = qrcode.make(host)
-#     savedqr = qr.save('qr.png')
-#     qrimage = qr.get_image()
-#     print(qrimage)
-#     print(ImageReader(qrimage))
-#     drawqr = ImageReader(qrimage)
-#     logo_size = 2*inch
-#     barcode_size = 75
-
-#     # Draw things on the PDF. Here's where the PDF generation happens.
-#     # See the ReportLab documentation for the full list of functionality.
-#     p.drawString(100, 100, host)
-#     p.drawImage(logo, 10, 10, mask='auto', height=height(obj.lab.logo, logo_size), width=logo_size)
-#     p.drawImage(drawqr, 200, 10, mask='auto', height=height(qrimage, barcode_size), width=barcode_size)
-#     # Close the PDF object cleanly, and we're done.
-#     p.showPage()
-#     p.save()
-
-#     # FileResponse sets the Content-Disposition header so that browsers
-#     # present the option to save the file.
-#     buffer.seek(0)
-#     return FileResponse(buffer, as_attachment=False, filename='hello.pdf')
-
-def pdf_page(request, pk):
+def new_pdf_page(request, pk):
     obj = get_object_or_404(Report, pk=pk)
     response = HttpResponse(content_type='application/pdf')
     pdf_name = f"{obj}.pdf"
@@ -492,60 +460,160 @@ def pdf_page(request, pk):
 
 
     buff = io.BytesIO()
+    # Doc Size and Margins
     doc = SimpleDocTemplate(buff, pagesize=letter, 
-        leftMargin = 2.2 * cm, 
+        leftMargin = 2.1 * cm, 
         rightMargin = 2.2 * cm,
         topMargin = 2.5* cm, 
         bottomMargin = 1.5 * cm)
 
+
+    # Fonts
     font_url = 'reports/static/fonts/FGMRegular/FGMR.ttf'
     bold_font_url = 'reports/static/fonts/FGBold/FGB.ttf'
+    bold__italic_font_url = 'reports/static/fonts/FGBoldItalic/FGBI.ttf'
+    heavy_bold_font_url = 'reports/static/fonts/FGHB.ttf'
+    heavy_italic_font_url = 'reports/static/fonts/FGHeavyItalic/FGHI.ttf'
+
 
     pdfmetrics.registerFont(TTFont('FGothic', font_url))
+    pdfmetrics.registerFont(TTFont('FGothicBold', bold_font_url))
+    pdfmetrics.registerFont(TTFont('FGothicBoldItalic', bold__italic_font_url))
+    pdfmetrics.registerFont(TTFont('FGothicHeavyBold', heavy_bold_font_url))
+    pdfmetrics.registerFont(TTFont('FGothicHeavyItalic', heavy_italic_font_url))
 
     Story = []
-    style = styles["Normal"]
-    style.leading = 24
-    style.weight = '900'
-    small = styles["Normal"]
-    small.weight = '900'
-    small.fontName = 'FGothic'
-    small.fontSize = 8
-    style.leading = 13
+
+    # Font Styles
+    styles.add(ParagraphStyle(
+                        name='style',
+                        parent=styles['Normal'],
+                        fontName = 'FGothic',
+                        fontSize=8,
+                        leading = 13
+                        ))
+    style = styles["style"]
+
+    styles.add(ParagraphStyle(
+                        name='fnormal',
+                        parent=styles['style'],
+                        fontName = 'FGothic',
+                        fontSize=8,
+                        leading = 11
+                        ))
+
+    styles.add(ParagraphStyle(
+                        name='small',
+                        parent=styles['style'],
+                        fontName = 'FGothic',
+                        fontSize=7.2,
+                        leading = 11
+                        ))
+
+
+    styles.add(ParagraphStyle(
+                        name='covid_small',
+                        parent=styles['style'],
+                        fontName = 'FGothic',
+                        fontSize=8,
+                        leading = 11
+                        ))
+
+    styles.add(ParagraphStyle(
+                    name='small_bold',
+                    parent=styles['small'],
+                    fontName = 'FGothicBold',
+                    fontSize=6.2,
+
+                    ))
+
+    styles.add(ParagraphStyle(
+                    name='small_heavy_bold',
+                    parent=styles['small'],
+                    fontName = 'FGothicHeavyBold',
+                    fontSize=7.6,
+
+                    ))
+
+    styles.add(ParagraphStyle(
+                    name='heavy_bold',
+                    parent=styles['small'],
+                    fontName = 'FGothicHeavyBold',
+                    fontSize=8.4,
+
+                    ))
+
+    styles.add(ParagraphStyle(
+                    name='small_bold_italic',
+                    parent=styles['small'],
+                    fontName = 'FGothicBoldItalic',
+                    fontSize=6.2,
+                    ))
+
+
+    styles.add(ParagraphStyle(
+                    name='small_heavy_italic',
+                    parent=styles['small'],
+                    fontName = 'FGothicHeavyItalic',
+                    fontSize=7.6,
+                    ))
+
+
+    small = styles['small']
+    covid_small = styles['covid_small']
+    fnormal = styles['fnormal']
+    small_bold = styles['small_bold']
+    small_bold_italic = styles['small_bold_italic']
+    small_heavy_bold = styles['small_heavy_bold']
+    heavy_bold = styles['heavy_bold']
+    small_heavy_italic = styles['small_heavy_italic']
+
+
+
     header_width = 22 * cm
 
     if(obj.lab.header):
         header = pdfImage(obj.lab.header.path, width=header_width, height=height(obj.lab.header, header_width))
 
-        # Story.append(header)
+    # Story.append(header)
     Story.append(Spacer(1, 1.1*cm))
-    data_row_height =  .52*cm
+    data_row_height =  .49*cm
 
-    doc_id_data = [[Paragraph(f'Doc. ID: ', small), Paragraph(f'{obj.doc_id}', small)]]
-    doc_id_table=Table(doc_id_data, 2*[.6*inch], 1*[data_row_height])
-
-    sex_data = [[Paragraph(f'Sex: ', small), Paragraph(f'{obj.client.sex[0]}'.upper(), small)]]
-
-    sex_table=Table(sex_data, 2*[.6*inch], 1*[data_row_height])
-
-
+    if(not obj.doctor):
+        doctor = ''
+    else:
+        doctor = obj.doctor     
     patient_data= [
-        [Paragraph(f'Order ID: ', small), Paragraph(f'{obj.pk}', small), ''],
-        [Paragraph(f'Patient ID: ', small), Paragraph(f'{obj.client.pk}', small), ''],
-        [Paragraph(f'Patient: ', small), Paragraph(f'{obj.client.full_name}'.upper(), small), ''],
-        [Paragraph(f'Date of Birth: ', small), Paragraph(f'{obj.client.dob}', small), doc_id_table],
-        [Paragraph(f'Age: ', small), Paragraph(f'{obj.client.age}', small), sex_table],
-        [Paragraph(f'Doctor: ', small), Paragraph(f'{obj.doctor}', small)],
+        [Paragraph(f'Order ID: ', heavy_bold), Paragraph(f'{obj.pk}', heavy_bold), '', ''],
+        [Paragraph(f'Patient ID: ', fnormal), Paragraph(f'{obj.client.pk}', fnormal), '', ''],
+        [Paragraph(f'Patient : ', fnormal), Paragraph(f'{obj.client.full_name}'.upper(), fnormal), '', ''],
+        [Paragraph(f'Date of Birth: ', fnormal), Paragraph(f'{obj.client.dob.strftime("%d/%m/%Y")}', fnormal), Paragraph(f'Doc. ID: ', fnormal), Paragraph(f'{obj.doc_id}', fnormal)],
+        [Paragraph(f'Age: ', fnormal), Paragraph(f'{obj.client.age}', fnormal), Paragraph(f'Sex: ', fnormal), Paragraph(f'{obj.client.sex[0]}'.upper(), fnormal)],
+        [Paragraph(f'Doctor: ', fnormal), Paragraph(f'{doctor}', fnormal), '', ''],
         ]
 
 
+    if(not obj.order_type):
+        order_type = ''
+    else:
+        order_type = obj.order_type
+
+    if(not obj.insurance):
+        insurance = ''
+    else:
+        insurance = obj.insurance
+    if(not obj.company):
+        company = ''
+    else:
+        company = obj.company
+    
     report_col1_data= [
-        [Paragraph(f'Collected:', small), ''],       
-        [Paragraph(f'Print Date:', small), ''],
-        [Paragraph(f'Branch: ', small), Paragraph(f'{obj.branch_no}', small)],
-        [Paragraph(f'Order Type: ', small), ''],
-        [Paragraph(f'Insurance: ', small), ''],
-        [Paragraph(f'Company:', small), ''],
+        [f'Collected:', '',Paragraph(f'{obj.collect_date.strftime("%d/%m/%Y %I:%M %p")}'.lower(), fnormal)],       
+        [f'Print Date:', '',Paragraph(f'{obj.print_date.strftime("%d/%m/%Y %I:%M %p")}'.lower(), fnormal)],
+        [f'Branch: ', Paragraph(f'{obj.branch_no}', fnormal),Paragraph(f'{obj.lab.name}'.upper(), fnormal)],
+        [f'Order Type:', '', Paragraph(f'{order_type}', fnormal)],
+        [f'Insurance: ', '',Paragraph(f'{insurance}', fnormal)],
+        [f'Company: ', '',Paragraph(f'{company}', fnormal)],
         ]
     
     report_col_1 = Table(report_col1_data,2*[.8*inch], 6*[data_row_height])
@@ -553,99 +621,109 @@ def pdf_page(request, pk):
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ])) 
     
-    report_col2_data= [
-        [Paragraph(f'{obj.collect_date.strftime("%d/%m/%Y %I:%M %p")}', small)],       
-        [Paragraph(f'{obj.print_date.strftime("%d/%m/%Y %I:%M %p")}', small)],
-        [Paragraph(f'{obj.lab.name}', small)],
-        [Paragraph(f'{obj.order_type}', small)],
-        [Paragraph(f'{obj.insurance}', small)],
-        [Paragraph(f'{obj.company}', small)],
-        ]
+   
 
 
 
-    report_col_2 = Table(report_col2_data,1*[5*cm], 6*[data_row_height])
-    report_col_2.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-    ]))       
-    report_col_data= [[report_col_1, report_col_2]]
-    report_col= Table(report_col_data,2*[3.4*cm], 1*[1.3*inch])
-    report_col.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('LEFTPADDING', (0, 0), (-1, -1), .5),
-
-    ]))
-
-    report_table_data= [[patient_data, report_col]]
-    test_request_data= [[Paragraph('Test Request: ', small), Paragraph(f'{obj.test_request}', small)]]
-    test_request_table = Table(test_request_data, 2*[1.5*inch], 1*[data_row_height])
+    # Test Request | 2nd Table
+    test_request_data = [[Paragraph('Test Request: ', style=covid_small), Paragraph(f'{obj.test_request}', style=covid_small)]]
+    test_request_table= Table(test_request_data,[2.2*cm, 18.1*cm], 1*[.68*cm])
     test_request_table.setStyle(TableStyle([
-        ('SIZE', (0, 0), (-1, -1), 7),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('BOX',(0,0),(1,-1),1.2, colors.black),
+        ('SIZE', (0, 0), (-1, -1), 7.2),
+        ('FONTNAME', (0,0), (0,-1), 'FGothic'),
+        ('LEFTPADDING', (0, 0), (-1, -1), .25 * cm),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
     ]))
 
-    test_request_outer_data= [[test_request_table, '']]
-    test_request_outer_table= Table(test_request_outer_data,2*[10.1*cm], 1*[.28*inch])
-    test_request_outer_table.setStyle(TableStyle([
-        ('BOX',(0,0),(1,-1),1.5, colors.black),
-    ]))
 
-    patient_sub_table = Table(patient_data,3*[1.2*inch], 6*[data_row_height])
-    patient_sub_table.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-    ]))
-
-    patient_table=Table([[patient_sub_table]], 1*[10.1*cm], 1*[3.4*cm])
+    patient_table=Table(patient_data,[2.1*cm, 3.65*cm, 1.4*cm, 3*cm
+    ], 6*[data_row_height])
     patient_table.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('SIZE', (0, 0), (-1, -1), 8),
+        ('FONTNAME', (0,0), (0,-1), 'FGothic'),
         ('LEFTPADDING', (0, 0), (-1, -1), .5),
+        ('TOPPADDING', (0, 0), (-1, -1), .5 *cm),
     ]))
-    report_table=Table(report_table_data,2*[3.6*inch], 1*[2.8*inch])
 
+
+    report_col_data = report_col1_data
+    report_col= Table(report_col_data,[2.1*cm, .85*cm, 7*cm], 6*[data_row_height])
+    report_col.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('SIZE', (0, 0), (-1, -1), 8),
+        ('FONTNAME', (0,0), (0,-1), 'FGothic'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 2),
+        ('TOPPADDING', (0, 0), (-1, -1), .5 *cm),
+
+    ]))
+
+
+    # Main Table (First)
     data_table_data = [[patient_table, report_col]]
-    data_table=Table(data_table_data,2*[10.1*cm], 1*[3.3*cm])
+    data_table=Table(data_table_data,[10.3*cm, 10*cm], 1*[3.2*cm])
     data_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (1, -1), 'LEFT'),
         ('LEADING', (0, 0), (-1, -1), 8.4),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('TOPPADDING', (0, 0), (-1, -1), 2.6),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 2.6),
-        ('LEFTPADDING', (0, 0), (-1, -1), .5),
+        ('LEFTPADDING', (0, 0), (-1, -1), 1.5),
         ('GRID',(0,0),(1,-1),1.5, colors.black),
     ]))
 
+
     Story.append(data_table)
-    Story.append(Spacer(1,.5*cm))
-    Story.append(test_request_outer_table)
+    Story.append(Spacer(1,.6*cm))
+    Story.append(test_request_table)
+    # Story.append(Spacer(1,.08*cm))
 
 
     #
-    row_1_data = [['',Paragraph('RESULT(S)', heading6), Paragraph('UNIT', heading6), Paragraph('REFERENCE VALUES', heading6)]]
-    row_1_table=Table(row_1_data, 4*[1.5*inch], 1*[.30*inch])
+    row_1_data = [['',Paragraph('RESULT(S)', small_heavy_bold), Paragraph('UNIT', small_heavy_bold), Paragraph('REFERENCE VALUES', small_heavy_bold)]]
+    row_1_table=Table(row_1_data, [3.57 *cm, 5.8*cm, 2.5 *cm , 1.5*inch], 1*[ .8*cm])
     row_1_table.setStyle(TableStyle([
         ('SIZE', (0, 0), (-1, -1), 6.4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 1),
+        ('TOPPADDING', (0, 0), (-1, -1), .3*cm),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), .5),
     ]))
 
     Story.append(row_1_table)
     # test_req_pos_data = [[Paragraph(f'{obj.test_request}', heading6), '']]
-    test_req_pos_data = [[f'{obj.test_request}']]
-    test_req_pos_table = Table(test_req_pos_data, 1*[2.2*inch],1* [.3 * inch])
+    test_req_pos_data = [[Paragraph(f'{obj.test_request}', style=small)]]
+    test_req_pos_table = Table(test_req_pos_data, 1*[7*cm],1* [.3 * inch])
     test_req_pos_table.setStyle(TableStyle([
         ('SIZE', (0, 0), (-1, -1), 7),
-        ('ALIGN', (0, 0), (1, -1), 'CENTER'),
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 1),
-        ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold')
+        ('FONTNAME', (0,0), (0,-1), 'FGothicBold'),
         
-    ]))    
-    row_2_data = [[ test_req_pos_table, '', f'{obj.unit_date.strftime("%d/%m/%Y %I:%M:%S%p")}', f'Department: {obj.department}', f'Prepared by: {obj.performed_by.prepared_by}']]
-    row_2_table=Table(row_2_data, 5*[4.04*cm], 1*[.30*inch])
+    ]))
 
+    row_2_sub_data = [['',f'{obj.print_date.strftime("%d/%m/%Y %I:%M:%S%p").lower()} DEPARTMENT: {obj.department}', '',f'Prepared by: {obj.performed_by.prepared_by.lower()}']]
+    row_2_sub_table = Table(row_2_sub_data, [5.45*cm, 6*cm, 4*cm], 1*[.35*cm])
+    row_2_sub_table.setStyle(TableStyle([
+        ('SIZE', (0, 0), (-1, -1), 6.4),
+        ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 1),
+        ('LEFTPADDING', (0, 0), (-1, -1), 1),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('FONTNAME', (0,0), (0,-1), 'FGothic'),
+    ]))
+
+    row_2_data = [[ Paragraph(f'{obj.test_request}',  style=small_heavy_italic), row_2_sub_table]]
+    row_2_table=Table(row_2_data, [2.2*cm, 17.9*cm], 1*[.35*cm])
     row_2_table.setStyle(TableStyle([
-        ('ALIGN', (0, 0), (1, -1), 'RIGHT'),
-        ('SIZE', (0, 0), (-1, -1), 7),
-        ('LINEBELOW', (0, 0), (-1, -1), 0.2, colors.gray),
+        ('SIZE', (0, 0), (-1, -1), 6.4),
+        ('FONTNAME', (0,0), (0,-1), 'FGothic'),
+        ('LINEBELOW', (0, 0), (-1, -1), .8, colors.black),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 1),
+        ('TOPPADDING', (0, 0), (-1, -1), 1),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+
     ]))     
     Story.append(row_2_table)
 
@@ -661,36 +739,37 @@ def pdf_page(request, pk):
     msgStr = msgStr.replace('<p>','<br />')
     msgStr = msgStr.replace('</p>','<br />')
 
-    req_data = [[f'{obj.test_request}']]
-    req_table = Table(req_data, 1*[2.2*inch],1* [.3 * inch])
+    #Result and Details Sub Table
+    req_data = [[ Paragraph(f'{obj.result}'.upper(), style=small), Paragraph(f'{msgStr}',  style=small)]]
+    req_table = Table(req_data, 1*[8.15*cm, 5.25*cm],1* [.3 * inch])
     req_table.setStyle(TableStyle([
         ('SIZE', (0, 0), (-1, -1), 7),
         ('ALIGN', (0, 0), (1, -1), 'LEFT'),
-        ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
         ('TOPPADDING', (0, 0), (-1, -1), 0),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('FONTNAME', (0,0), (0,-1), 'FGothic'),
 
-        
+
     ]))  
 
     req_res_data = [[req_table, Paragraph(f'{obj.result}', small), '', '']]
-    req_res_table = Table(req_res_data, 2*[1.8*inch],1* [.3 * inch])
+    req_res_table = Table(req_res_data, [4.7*cm, 4.5*cm],1* [.3 * inch])
     req_res_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (1, -1), 'RIGHT'),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))  
-    row_3_data = [[ req_res_table, '',Paragraph(f'{msgStr}', small)]]
+    row_3_data = [[Paragraph(f'{obj.test_request}', small), req_table,'']]
     row_3_col_1_data = []
     
-    row_3_table=Table(row_3_data,3*[2.25*inch], 1*[3*inch])
+    row_3_table=Table(row_3_data,[5.7 *cm, 11*cm, 3.5*cm], 1*[2.8*inch])
     row_3_table.setStyle(TableStyle([
-        ('SIZE', (0, 0), (-1, -1), 7),
+        ('SIZE', (0, 0), (-1, -1), 6.2),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('TOPPADDING', (0, 0), (-1, -1), .5),
     ])) 
     
     Story.append(row_3_table)
-    Story.append(Spacer(1,0.2*inch))
+    Story.append(Spacer(1,0.14*inch))
     
     if request.is_secure():
         protocol = 'https'
@@ -700,14 +779,16 @@ def pdf_page(request, pk):
     host = f'{protocol}://{current_site.domain}{request.path}'
     path = settings.MEDIA_ROOT + '/qrcodes/'+str(obj.pk)+".png"    
     qrimage = gen_qr(host, path)
-    qr = pdfImage(path, width=1*inch, height=1*inch)
+    qr_size = 2.5*cm
+    qr = pdfImage(path, width=qr_size, height=qr_size)
     if(obj.lab.stamp):
         stamp = pdfImage(obj.lab.stamp.path, width=2.5*inch, height=height(obj.lab.stamp, 2.5*inch))
-    bottom_data= [[qr,'','', stamp,'','']]
-    bottom_table=Table(bottom_data, 6*[1.3*inch], 1*[2*inch])
+    bottom_data= [['', qr, stamp]]
+    bottom_table=Table(bottom_data, [.3*cm,11.3*cm, 9.5*cm], 1*[5.5*cm])
     bottom_table.setStyle(TableStyle([
         ('ALIGN', (0, 0), (1, -1), 'LEFT'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+
     ]))
     
     
@@ -740,15 +821,19 @@ def pdf_page(request, pk):
                                 ], 1*[2*inch], 2*[.3*inch])
 
     # Add the content as before then...
+    if(obj.lab.footer):
+        footer_width = 21.5 *cm
+        footer_height = height(obj.lab.footer, footer_width)
+        footer_img = pdfImage(obj.lab.footer.path, width=footer_width, height=footer_height)
 
-    foot_table=Table([['','','',signature_section_table]], 4*[2*inch], 1*[1*inch])
-    foot_table.setStyle(TableStyle([
-        ('LINEBELOW', (0, 0), (-1, -1), 0.2, colors.black),
-
-    ]))         
+    foot_table=Table([
+        ['','','',signature_section_table],
+        [footer_img, '', '', '']], [2*inch, 2*inch, 5.55*cm, 2*inch], [1*cm, .75*cm ])     
     footer = foot_table
         # Story.append(footer)
     
+
+
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id='normal')
     template = PageTemplate(id='test', frames=frame, onPage=partial(header_and_footer, header_content=header, footer_content=footer))
     doc.addPageTemplates([template])
@@ -758,6 +843,7 @@ def pdf_page(request, pk):
     response.write(buff.getvalue())
     buff.close()
     return response
+
 
 # def pdf_page_old(request, pk):
 #     obj = get_object_or_404(Report, pk=pk)

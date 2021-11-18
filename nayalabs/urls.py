@@ -55,7 +55,7 @@ urlpatterns = [
     path('accounts/need-permission/', auth_views.LoginView.as_view(template_name="accounts/need-permission.html", authentication_form=UserLoginForm), name="need_permission"),
     path('accounts/logout/', auth_views.LogoutView.as_view(template_name="accounts/login.html"), name='logout'),
     path("accounts/register/", report_views.register, name="register"),
-    path("pdf-report/<int:pk>", report_views.pdf_page, name="report_pdf"),
+    path("pdf-report/<int:pk>", report_views.new_pdf_page, name="report_pdf"),
     path('qr_code/', include('qr_code.urls', namespace="qr_code")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
