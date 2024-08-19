@@ -1,1 +1,3 @@
 /nayalabs_venv
+/venv
+*.pyc
